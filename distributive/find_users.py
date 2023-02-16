@@ -12,6 +12,11 @@ from selenium.common.exceptions import TimeoutException
 import time as time
 import os
 
+def client_initialize(s_id, e_id):
+    print("Data is not stored after code execution.")
+    cred = (input("Email: "), input("Password: "))
+    return cred, s_id, e_id
+
 def config(credentials:tuple):
     driver = webdriver.Chrome(executable_path=os.path.dirname(os.path.abspath(__file__)) + '/chromedriver') 
     driver.get("https://bishopmoore.schoology.com/")
@@ -48,7 +53,9 @@ def get_positive_user_id(driver :webdriver, url_list :list):
 
 def consolidate_data(start_id:int, end_id:int):
     data_df = pd.Series(user_exists, user_list)
-    data_df.to_csv(f"Pinged Schoology Profiles at {start_id} to {end_id}.csv")
+    filename = "Pinged Schoology Profiles at {start_id} to {end_id}.csv"
+    data_df.to_csv(filename)
+    return filename
 
 
 def main():
@@ -64,7 +71,18 @@ def main():
     end_time = time.time()
     efficiency = round((end_id-start_id)/(end_time-start_time), 3)
     print(f"Total time iterating: {(int(end_time-start_time))//60}m:{(int(end_time-start_time))%60}s\nTotal URLS iterated: {end_id-start_id}\nAverage runtime efficiency: {efficiency} users/sec")
-    consolidate_data(start_id, end_id)
+    return consolidate_data(start_id, end_id)
+
+def client_main(cred, start_id, end_id):
+    input(f"Press ENTER to iterate through {end_id-start_id} users...")
+    d = config(cred)
+    user_list = create_url_list(start_id, end_id)
+    start_time = time.time()
+    get_positive_user_id(d, user_list)
+    end_time = time.time()
+    efficiency = round((end_id-start_id)/(end_time-start_time), 3)
+    print(f"Total time iterating: {(int(end_time-start_time))//60}m:{(int(end_time-start_time))%60}s\nTotal URLS iterated: {end_id-start_id}\nAverage runtime efficiency: {efficiency} users/sec")
+    return consolidate_data(start_id, end_id)
 
 if __name__=="__main__":
     main()
