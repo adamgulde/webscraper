@@ -9,6 +9,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import ElementNotInteractableException
 import time as time
 import os
 
@@ -26,8 +27,15 @@ def config(credentials:tuple):
     input_box = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.NAME, "password"))
     )
-    input_box.send_keys(credentials[1], Keys.ENTER)
-    time.sleep(4)
+    i = 0
+    while driver.current_url != 'https://bishopmoore.schoology.com/home':
+        try:  
+            input_box.send_keys(credentials[1], Keys.ENTER)
+            time.sleep(1)
+            i+=1
+        except ElementNotInteractableException:
+            print(f"An error occured, retrying...({i})")
+            time.sleep(3)
     return driver
 
 user_list = []
@@ -53,7 +61,7 @@ def get_positive_user_id(driver :webdriver, url_list :list):
 
 def consolidate_data(start_id:int, end_id:int):
     data_df = pd.Series(user_exists, user_list)
-    filename = "Pinged Schoology Profiles at {start_id} to {end_id}.csv"
+    filename = f"Pinged Schoology Profiles at {start_id} to {end_id}.csv"
     data_df.to_csv(filename)
     return filename
 
