@@ -1,7 +1,7 @@
 import socket
 import time
 import os
-import pyodbc
+# import pyodbc
 
 def webscrape(ids):
     import find_users
@@ -50,25 +50,25 @@ def webscrape(ids):
 #         time.sleep(1)
         
 def upload_2_DB():
-    import pyodbc 
+    # import pyodbc 
 
-    server = 'sql9.freesqldatabase.com,3306' 
-    database = 'sql9609574' 
-    username = 'sql9609574' 
-    password = 'U6JqdflMxh'
+    # server = 'sql9.freesqldatabase.com,3306' 
+    # database = 'sql9609574' 
+    # username = 'sql9609574' 
+    # password = 'U6JqdflMxh'
 
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        f'Server={server};'
-                        f'Database={database};'
-                        'ENCRYPT=yes;'
-                        f'UID={username};'
-                        f'PWD={password}')
+    # conn = pyodbc.connect('Driver={SQL Server};'
+    #                     f'Server={server};'
+    #                     f'Database={database};'
+    #                     'ENCRYPT=yes;'
+    #                     f'UID={username};'
+    #                     f'PWD={password}')
 
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM table_name')
+    # cursor = conn.cursor()
+    # cursor.execute('SELECT * FROM table_name')
 
-    for i in cursor:
-        print(i)
+    # for i in cursor:
+    #     print(i)
 
 
 def get_command():
